@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-theme.css">
-    <link rel="stylesheet" href="css/index.css"/>
+    <link rel="stylesheet" href="css/publish.css">
     <script type="application/javascript" src="js/bootstrap.min.js"></script>
 </head>
 <body>
@@ -17,7 +17,7 @@
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                 <span class="sr-only">码匠社区</span>
             </button>
-            <a class="navbar-brand" href="#">码匠社区</a>
+            <a class="navbar-brand" href="/">码匠社区</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -29,10 +29,7 @@
                 <button type="submit" class="btn btn-default">搜索</button>
             </form>
             <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <a href="/publish">发布</a>
-                </li>
-<!--      th:if="${session.user == null}"的意思是通过th:if来判断session是否为空  这里可以用session.来获取里面存的值          -->
+                <!--      th:if="${session.user == null}"的意思是通过th:if来判断session是否为空  这里可以用session.来获取里面存的值          -->
                 <li th:if="${session.user == null}">
                     <a href="https://github.com/login/oauth/authorize?client_id=0f6c2d88e1a2d3e8bb05&redirect_uri=http://localhost:8080/callback&scope=user&state=1">登录</a></li>
                 <li class="dropdown" th:if="${session.user !=null}">
@@ -50,24 +47,24 @@
 <div class="container-fluid main">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
-            <h3><span class="glyphicon glyphicon-list"></span>发现</h3>
-            <div class="media" th:each="question : ${questions}">
-                <div class="media-left">
-                    <a href="#">
-                        <img class="media-object" th:src="${question.user.avatarUrl}">
-                    </a>
+            <h3><span class="glyphicon glyphicon-plus"></span>发起</h3>
+            <form action="/publish" method="post">
+                <div class="form-group">
+                    <label for="title">问题标题</label>
+                    <input type="text" name="title" th:value="${title}" class="form-control" id="title" placeholder="问题标题">
                 </div>
-                <div class="media-body">
-                    <h4 class="media-heading" th:text="${question.title}"></h4>
-                    <span th:text="${question.description}">br></span>
-                        <span class="text-desc">
-                            <span th:text="${question.commentCount}"></span>
-                            个回复~<span th:text="${question.viewCount}"></span>
-<!--                            这里通过${#dates.format(question.getGmtCreate,'dd MMM yyyy')}进行时间的转化-->
-                            浏览~<span th:text="${#dates.format(question.gmtCreate,'dd MMM yyyy')}"></span>
-                        </span>
+                <div class="form-group">
+                    <label for="description">问题描述</label>
+                    <!--            bootstrap通过rows和cols来约定textarea的大小            -->
+                    <textarea class="form-control" th:value="${description}" name="description" id="description" cols="30" rows="10"></textarea>
                 </div>
-            </div>
+                <div class="form-group">
+                    <label for="tag">添加标签</label>
+                    <input type="text" name="tag" th:value="${tag}" class="form-control" id="tag" placeholder="输入标签">
+                </div>
+                <span class="alert alert-danger" th:if="${error} !=null" th:text="${error}"></span>
+                <button type="submit" class="btn btn-success publishbtn">发布</button>
+            </form>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12" >
             问题标题
