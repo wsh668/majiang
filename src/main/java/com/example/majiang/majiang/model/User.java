@@ -4,6 +4,7 @@ import lombok.Data;
 
 
 //这里通过使用lombok的@Data注解可以自动帮我们注入getset方法  还有其他功能可以参考官方文档
+//注意如果想使用这个插件 除了导入依赖还需要在idea中设置插件
 
 public class User {
     private Integer id;

@@ -1,5 +1,6 @@
 package com.example.majiang.majiang.controller;
 
+import com.example.majiang.majiang.dto.PaginationDTO;
 import com.example.majiang.majiang.dto.QuestionDTO;
 import com.example.majiang.majiang.mapper.UserMapper;
 import com.example.majiang.majiang.model.User;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +26,9 @@ public class IndexController {
     private QuestionService questionService;
 
     @GetMapping("/")
-    public String index(HttpServletRequest request, Model model){
+    public String index(HttpServletRequest request, Model model,
+                        @RequestParam(value = "page",defaultValue = "1") Integer page,
+                        @RequestParam(value = "size",defaultValue = "2") Integer size){
         Cookie[] cookies =request.getCookies();
         if(cookies!=null) {
             for (Cookie cookie : cookies) {
@@ -38,8 +42,8 @@ public class IndexController {
                 }
             }
         }
-        List<QuestionDTO> questionList=questionService.list();
-        model.addAttribute("questions",questionList);
+        PaginationDTO pagination =questionService.list(page,size);
+        model.addAttribute("pagination",pagination);
         return "index";
     }
 }
