@@ -4,9 +4,10 @@
 <head>
     <title>码匠社区</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!--    这里css文件无法使用  是因为配置了拦截器  被拦截了-->
 <!--    这里需要注意因为这个引入的路径css/bootstrap.min.css是对应/profile/questions的同级  也就是会把questions替换  而导致加载不了 需要在前面加/使他在根目录下-->
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="/css/profile.css">
+    <link rel="stylesheet" href="/css/profile1.css"/>
     <script src="/js/jQuery-3.4.1.js"></script>
     <script type="application/javascript" src="/js/bootstrap.min.js"></script>
 </head>
@@ -17,6 +18,50 @@
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
             <h3><span th:text="${SectionName}"></span></h3>
+            <div class="media" th:each="question : ${pagination.questions}">
+                <div class="media-left">
+                    <a href="#">
+                        <img class="media-object" th:src="${question.user.avatarUrl}">
+                    </a>
+                </div>
+            <div class="media-body">
+                <h4 class="media-heading" th:text="${question.title}"></h4>
+                <span th:text="${question.description}">br></span>
+                <span class="text-desc">
+                            <span th:text="${question.commentCount}"></span>
+                            个回复~<span th:text="${question.viewCount}"></span>
+                    <!--                            这里通过${#dates.format(question.getGmtCreate,'dd MMM yyyy')}进行时间的转化-->
+                            浏览~<span th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}"></span>
+                        </span>
+            </div>
+        </div>
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li th:if="${pagination.showFirstPage}">
+                    <a th:href="@{'/profile/'+${section}(page=${1})}" aria-label="Previous">
+                        <span aria-hidden="true">&lt;&lt;</span>
+                    </a>
+                </li>
+                <li th:if="${pagination.showPrevious}">
+                    <a th:href="@{'/profile/'+${section}(page=${pagination.page - 1})}" aria-label="Previous">
+                        <span aria-hidden="true">&lt;</span>
+                    </a>
+                </li>
+                <li th:each="page : ${pagination.pages}" th:class="${pagination.page == page}?'active':''">
+                    <a th:href="@{'/profile/'+${section}(page = ${page})}" th:text="${page}"></a>
+                </li>
+                <li th:if="${pagination.showNext}">
+                    <a th:href="@{'/profile/'+${section}(page=${pagination.page + 1})}" aria-label="Next">
+                        <span aria-hidden="true">&gt;</span>
+                    </a>
+                </li>
+                <li th:if="${pagination.showEndPage}">
+                    <a  th:href="@{'/profile/'+${section}(page = ${pagination.totalPage})}" aria-label="Next">
+                        <span aria-hidden="true">&gt;&gt;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12" >
             <div class="list-group section">

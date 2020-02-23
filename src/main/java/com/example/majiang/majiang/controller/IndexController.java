@@ -26,22 +26,9 @@ public class IndexController {
     private QuestionService questionService;
 
     @GetMapping("/")
-    public String index(HttpServletRequest request, Model model,
+    public String index(Model model,
                         @RequestParam(value = "page",defaultValue = "1") Integer page,
                         @RequestParam(value = "size",defaultValue = "2") Integer size){
-        Cookie[] cookies =request.getCookies();
-        if(cookies!=null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")) {
-                    String token = cookie.getValue();
-                    User user = userMapper.findbytoken(token);
-                    //                让前端通过session去判断是否登录 获取登录信息
-                    if (user != null) {
-                        request.getSession().setAttribute("user", user);
-                    }
-                }
-            }
-        }
         PaginationDTO pagination =questionService.list(page,size);
         model.addAttribute("pagination",pagination);
         return "index";
